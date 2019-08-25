@@ -10,7 +10,7 @@ namespace zsWong{
 	template <typename T> std::ostream& operator << (std::ostream& os, List<T> &li);
 	template <typename T> class Node{
 		friend class List<T>;
-		friend std::ostream& operator<<<T>(std::ostream&, List<T>&);
+		friend std::ostream& operator<< <T>(std::ostream&, List<T>&);
 
 		public:
 		Node& operator=(const Node &n){
@@ -31,7 +31,7 @@ namespace zsWong{
 	};
 
 	template <typename T> class List{
-		friend std::ostream& operator<<<T>(std::ostream& os, List<T> &li);
+		friend std::ostream& operator<< <T>(std::ostream& os, List<T> &li);
 
 		public:
 		List& operator=(const List &liOri){
