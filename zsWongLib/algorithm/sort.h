@@ -3,6 +3,8 @@
 #define ZSWONGSORT
 
 #include <random>
+#include <map>
+#include <set>
 #include "../container/list.h"
 
 namespace zsWong{

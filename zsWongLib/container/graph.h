@@ -5,12 +5,19 @@
 #include <map>
 #include <set>
 
-#include "List.h"
-
 namespace zsWong{
-    template <typename T> class Graph{
-        std::map<T, zsWong::List<T>*> m_map_vertex;
+    template <typename Node, typename Val> class DGraph{
+        public:
+        DGraph(const Node&);
+        //directed graph
+        std::map<Node, std::map<Node, Val>> m_map_memory;
+        std::set<Node> m_set_alreadyin;
     };
+
+    template <typename Node, typename Val> DGraph<Node, Val>::DGraph(const Node& _Node){
+        std::map<Node, Val> _map_path;
+        m_map_memory[_Node] = _map_path;
+    }
 }
 
 #endif
