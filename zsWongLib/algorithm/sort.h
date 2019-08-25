@@ -6,13 +6,13 @@
 #include "../container/list.h"
 
 namespace zsWong{
-	template <typename T> List<T> sortQuick(const List<T>& _li_ori){
+	template <typename L, typename T> L sortQuick(const L& _li_ori){
 		if(_li_ori.getLength() < 2){
 			//there is no need in sorting array containing 0 or 1 element
 			return _li_ori;
 		}
 		else{
-			List<T> _li_left, _li_right;    //liLeft receives the elements smaller than pivot element, liRight receives the greater or equal
+			L _li_left, _li_right;    //liLeft receives the elements smaller than pivot element, liRight receives the greater or equal
 
 			//use random library to generate random pivot index
 			static std::default_random_engine s_e;
@@ -35,8 +35,13 @@ namespace zsWong{
 			}
 
 			//we sort _li_left and _li_right, and make them a result list together with _T_pivot
-			return sortQuick(_li_left).push(_T_pivot).append(sortQuick(_li_right));
+			return sortQuick<L, T>(_li_left).push(_T_pivot).append(sortQuick<L, T>(_li_right));
 		}
+	}
+
+	//Dijkstra algorithm find shortest path in DAG
+	template <typename Node, typename Val, typename Graph, typename List>  
+	List find_shortestPath_Dijkstra(const Graph& _graph){
 	}
 }
 
