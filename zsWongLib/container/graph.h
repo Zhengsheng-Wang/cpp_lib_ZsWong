@@ -14,14 +14,14 @@ namespace zsWong{
         //directed graph
         friend std::ostream &operator<< <Node, Val>(std::ostream &, const DGraph &);
         public:
-        DGraph() = default;
+        DGraph(const Node &);
 
         //add a vertex(start Node --->[edge Val] end Node)
         /*
             when we add a vertex to this graph, we also should specify the edge
             pointing to that vertex
         */
-        bool add_vertex(const Node &, const Val &, const Node &);
+        DGraph & add_vertex(const Node &, const Val &, const Node &);
 
         private:
         //add a edge(start Node --->[edge Val] end Node)
@@ -29,7 +29,6 @@ namespace zsWong{
         
         private:
         std::map<Node, std::map<Node, Val>> m_map_memory;
-        std::set<Node> m_set_alreadyin;
     };
     //Define << operator. Output the inner hash table m_map_memory actually.
     /*
@@ -56,12 +55,13 @@ namespace zsWong{
         return _os;
     }
 
-    template <typename Node, typename Val> 
-    void DGraph<Node, Val>::add_edge(const Node &_Node_start, const Val &_Val_weight, const Node &_Node_end){
+    template <typename Node, typename Val>
+    DGraph<Node, Val>::DGraph(const Node &_Node){
+        m_map_memory[_Node] = std::map<Node, Val>();
     }
 
     template <typename Node, typename Val> 
-    bool DGraph<Node, Val>::add_vertex(const Node &_Node_start, const Val &_Val_weight, const Node &_Node_end){
+    DGraph<Node, Val> & DGraph<Node, Val>::add_vertex(const Node &_Node_start, const Val &_Val_weight, const Node &_Node_end){
         /*
         _Node_start refers the start vertex of this edge
         _Val_weight refers the weight of this edge
@@ -69,38 +69,27 @@ namespace zsWong{
         */
 
         auto _it_start = m_map_memory.find(_Node_start);
-        auto _it_end = m_map_memory.find(_Node_end);
 
         if(_it_start == m_map_memory.end()){
-            //start vertex is not a start point already in this graph
-            //Add a new edge with _Node_start as start Node to this DGraph
-            m_map_memory[_Node_start] = std::map<Node, Val>(std::pair<Node, Val>(_Node_end, _Val_weight));
-
-            if(_it_end == m_map_memory.end()){
-                /*
-                    end vertex is not a start point already in this graph,
-                    so edge adding fails
-                */
-               return false;
-            }
-            else{
-                //end vertex is a start point already in this graph
-                m_map_memory.insert(std::pair<Node, std::map<Node, Val>>(
-                    _Node_start, std::map<Node, Val>({std::pair<Node, Val>(_Node_end, _Val_weight)})
-                ));
-            }
+            //_Node_start is not a start point already in this graph
+            //Add _Node_start and a new edge with _Node_start as start Node to this DGraph
+            std::map<Node, Val> _map_tmp;
+            _map_tmp[_Node_end] = _Val_weight;
+            m_map_memory[_Node_start] = _map_tmp;
         }
         else{
-            if((*_it_start).second.find(_Node_end) != (*_it_start).second.end()){
-                //if this edge is already existing 
-                return false;
-            }
-            else{
-                //add this edge
-                (*_it_start).second[_Node_end] = _Val_weight;//add the edge(_Node_start ---> _Val_weight ---> _Node_end)
-            }
+            //_Node_start is in this DGraph
+            //If _Node_end is not already associated with _Node_start, add it. Or do nothing.
+            //The type of *(_it_start) is std::pair<Node, std::map<Node, Val>>
+            //The type of _it_end is std::pair<Node, Val>
+            auto _it_end = _it_start->second.find(_Node_end);
 
+            if(_it_end == _it_start->second.end()){
+                //If _Node_end is not a end vertex already associated with _Node_start, then add it
+                _it_start->second[_Node_end] = _Val_weight;
+            }
         }
+        return *this;
     }
 }
 

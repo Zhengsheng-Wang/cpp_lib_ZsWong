@@ -6,10 +6,7 @@
 
 int main(){
     zsWong::DGraph<char, int> _DGraph_test('C');
-    _DGraph_test.add_vertex('C', 6, 'A');
+    _DGraph_test.add_vertex('C', 6, 'A').add_vertex('B', 1, 'D').add_vertex('C', 2, 'D');
     std::cout << _DGraph_test;
-    zsWong::List<int> _List_list;
-    _List_list.push(1);
-    std::cout << _List_list << std::endl;
     return 0;
 }
